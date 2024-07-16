@@ -60,15 +60,28 @@ async function addItem (request, response) {
 //** week 6, get all items from the json database*/
 app.get("/get/items", getItems)
 async function getItems (request, response) {
-    //begin here
+    // read in the todo lists stored in database.json file
+    var data = await fsPromises.readFile("database.json");
 
+    // Return a response to whoever called the data we just read in, we will return the data from the file but parsed as JSON data:
+    response.json(JSON.parse(data));
 };
 
 //** week 6, search items service */
 app.get("/get/searchitem", searchItems) 
 async function searchItems (request, response) {
-    //begin here
+    // this parameter will be the name of the todo List searched for
+    var searchField = request.query.taskname;
 
+    // read in the database 
+    var json = JSON.parse (await fsPromises.readFile("database.json"));
+
+    // take the data from database and apply a filter, spearate out only the todo lists that match our search parameter given to the bckend service and stored "searchField  "
+    var returnData = json.filter(jsondata => jsondata.Task === searchField);
+
+    // return a response to whoever called this service
+    response.json(returnData);
+    
 };
 
 
